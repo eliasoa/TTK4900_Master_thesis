@@ -73,17 +73,7 @@ opt = optimoptions('fmincon' ,          ...
                    'MaxFunEvals', 5000);
 z = fmincon(@(z)0.5*z.'*Q*z, z0, [], [], A_eq, b_eq, vlb, vub, ...
             @(z)nonlcon(z,N,M,nx,nu,a,b), opt);
-
-%% Generate ts_w
-nonlcon(z,N,M,nx,nu,a,b)
-
-num_variables = 1/dt;
-zero_padding = zeros(num_variables,1);
-data = [zero_padding zero_padding zero_padding; fx_opt fy_opt t_opt];
-t = 0:dt:(size(data,1)-1)*dt;
-ts_w = timeseries(data,t);
-
-%% Plot
+%% 
 x_opt = [z(1:nx:N*nx);z(N*nx-5)];
 x_opt(end-5:end)
 xd_opt = [z(2:nx:N*nx);z(N*nx-4)];
@@ -97,6 +87,7 @@ t_opt  = [u_opt(3:nu:N*nu);u_opt(N*nu)];
 
 t = 0:dt:(N)*dt;
 
+%% Plot
 subplot(4,1,1);
 plot(t,x_opt)
 legend('x')
@@ -111,6 +102,17 @@ plot(t,fx_opt); hold on;
 plot(t,fy_opt);
 plot(t,t_opt); hold off;
 legend('$f_x$', '$f_y$', '$\tau$', 'interpreter', 'latex')
+
+%% Generate ts_w
+nonlcon(z,N,M,nx,nu,a,b)
+
+num_variables = 1/dt;
+zero_padding = zeros(num_variables,1);
+data = [zero_padding zero_padding zero_padding; fx_opt fy_opt t_opt];
+t = 0:dt:(size(data,1)-1)*dt;
+ts_w = timeseries(data,t);
+
+
 
 
 function [ci, ceq] = nonlcon(z,N,M,nx,nu,a,b)
