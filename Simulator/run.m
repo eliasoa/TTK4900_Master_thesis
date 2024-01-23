@@ -27,6 +27,11 @@ v0                  = zeros(3,1);   % velocity
 
 initialCondition    = [y0;v0;l0'];
 
+%% Force limits
+f_min = 10;
+f_max = 100;
+level = 2;
+
 %% Sølve sine ting
 ts_w = planner_Solve(mp,Iz,initialCondition(1:6),a,b,f_min,f_max);
 
@@ -39,10 +44,6 @@ x_dd                = [ 0;
                         0 ];
 reference           = [x_d; x_dd];
 
-%% Force limits
-f_min = 10;
-f_max = 100;
-level = 2;
 %% Run simulink
 simtime             = 10;    % How long to simulate
 out                 = sim("cable_rob.slx");
